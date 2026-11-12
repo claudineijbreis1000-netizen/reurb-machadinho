@@ -1,0 +1,17 @@
+const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
+const KEY='reurb_machadinho_demo_v2';
+function records(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch{return []}}
+function saveRecords(a){localStorage.setItem(KEY,JSON.stringify(a));render()}
+function go(view){$$('.view').forEach(x=>x.classList.toggle('active',x.id==='view-'+view));$$('.nav').forEach(x=>x.classList.toggle('active',x.dataset.view===view));$('#sidebar').classList.remove('open');if(view==='mapa')setTimeout(()=>map&&map.invalidateSize(),100);window.scrollTo({top:0,behavior:'smooth'})}
+$$('.nav').forEach(b=>b.addEventListener('click',()=>go(b.dataset.view)));
+$$('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));
+$('#menuBtn').addEventListener('click',()=>$('#sidebar').classList.toggle('open'));
+function render(){const a=records();$('#statTotal').textContent=a.length;$('#recordsBody').innerHTML=a.length?a.slice().reverse().map(r=>`<tr><td>${r.protocolo}</td><td>${esc(r.nome)}</td><td>${esc(r.lote||'—')}</td><td>${esc(r.localidade||'—')}</td><td>${r.data}</td></tr>`).join(''):'<tr><td colspan="5" class="empty">Nenhum pré-cadastro neste dispositivo.</td></tr>'}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+$('#cadastroForm').addEventListener('submit',e=>{e.preventDefault();const d=Object.fromEntries(new FormData(e.target).entries());d.protocolo='DEMO-'+Date.now().toString().slice(-8);d.data=new Date().toLocaleDateString('pt-BR');const a=records();a.push(d);saveRecords(a);$('#formFeedback').textContent='Pré-cadastro demonstrativo salvo neste dispositivo. Protocolo: '+d.protocolo;e.target.reset()});
+$('#exportBtn').addEventListener('click',()=>{const a=records();if(!a.length)return alert('Não há registros para exportar.');const cols=['protocolo','nome','telefone','email','relacao','lote','localidade','area','tempo','descricao','data'];const csv=[cols.join(';'),...a.map(r=>cols.map(k=>'"'+String(r[k]||'').replace(/"/g,'""')+'"').join(';'))].join('\n');const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});const u=URL.createObjectURL(blob),x=document.createElement('a');x.href=u;x.download='pre_cadastros_demonstrativos.csv';x.click();URL.revokeObjectURL(u)});
+$('#clearBtn').addEventListener('click',()=>{if(confirm('Apagar todos os registros demonstrativos deste navegador?')){localStorage.removeItem(KEY);render()}});
+let map=null;if(window.L){map=L.map('map').setView([-9.44,-61.98],12);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(map);L.marker([-9.44,-61.98]).addTo(map).bindPopup('Referência aproximada de Machadinho do Oeste — não representa limite oficial.');}
+let deferredPrompt=null;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;$('#installBtn').hidden=false});$('#installBtn').addEventListener('click',async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;$('#installBtn').hidden=true});
+if('serviceWorker'in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./service-worker.js').catch(()=>{});
+render();

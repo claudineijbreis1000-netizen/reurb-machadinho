@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#123b55"><meta name="description" content="Sistema Municipal de Cadastro e Apoio à Regularização Fundiária de Machadinho do Oeste.">
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="style.css">
+<title>REURB MACHADINHO</title>
+</head>
+<body>
+<header class="topbar">
+ <button class="menu-btn" id="menuBtn" aria-label="Abrir menu">☰</button>
+ <div class="brandmark">RM</div><div class="brand"><strong>REURB MACHADINHO</strong><small>Cadastro e Regularização Fundiária</small></div>
+ <div class="top-actions"><span class="status-dot"></span><span class="status-text">Ambiente demonstrativo</span><button class="install-btn" id="installBtn" hidden>Instalar aplicativo</button></div>
+</header>
+<div class="shell">
+<aside class="sidebar" id="sidebar">
+ <div class="side-label">MENU PRINCIPAL</div>
+ <button class="nav active" data-view="inicio">⌂ <span>Visão geral</span></button>
+ <button class="nav" data-view="cadastro">＋ <span>Novo pré-cadastro</span></button>
+ <button class="nav" data-view="mapa">⌖ <span>Mapa cadastral</span></button>
+ <button class="nav" data-view="registros">▤ <span>Cadastros registrados</span></button>
+ <div class="side-label">INFORMAÇÕES</div>
+ <button class="nav" data-view="sobre">ⓘ <span>Sobre o sistema</span></button>
+ <div class="side-note">Plataforma municipal de apoio à organização cadastral e aos procedimentos de REURB.</div>
+</aside>
+<main class="content">
+<section class="view active" id="view-inicio">
+ <div class="hero">
+  <div><span class="eyebrow">MUNICÍPIO DE MACHADINHO DO OESTE · RO</span><h1>Regularização fundiária com informação, organização e transparência.</h1>
+  <p>Uma plataforma para reunir dados cadastrais, documentos e informações territoriais do Setor Chacareiro.</p>
+  <div class="hero-actions"><button class="btn primary" data-go="cadastro">Fazer pré-cadastro</button><button class="btn ghost" data-go="mapa">Visualizar mapa</button></div></div>
+  <div class="hero-art"><div class="land-shape"></div><div class="pin">⌖</div><div class="art-caption">GESTÃO TERRITORIAL</div></div>
+ </div>
+ <div class="notice"><strong>Importante:</strong> esta versão é um protótipo demonstrativo. Os registros ficam somente neste dispositivo. Não insira CPF, documentos pessoais ou informações reais até a implantação de servidor seguro e autorização municipal.</div>
+ <div class="section-head"><div><span class="eyebrow">PAINEL DE ACOMPANHAMENTO</span><h2>Resumo do ambiente</h2></div><span class="tag">Dados locais de demonstração</span></div>
+ <div class="stats">
+  <article class="stat"><span>Pré-cadastros neste dispositivo</span><strong id="statTotal">0</strong><small>Registros armazenados localmente</small></article>
+  <article class="stat"><span>Imóveis georreferenciados</span><strong>—</strong><small>Aguardando base cartográfica oficial</small></article>
+  <article class="stat"><span>Processos em análise</span><strong>—</strong><small>Requer módulo administrativo integrado</small></article>
+  <article class="stat"><span>Documentos recebidos</span><strong>—</strong><small>Não habilitado nesta demonstração</small></article>
+ </div>
+ <div class="feature-grid">
+  <article class="feature"><div class="feature-icon">⌖</div><h3>Cadastro territorial</h3><p>Organização das informações do imóvel, localização e características da ocupação.</p></article>
+  <article class="feature"><div class="feature-icon">▣</div><h3>Documentação</h3><p>Estrutura preparada para anexação e conferência documental em ambiente seguro.</p></article>
+  <article class="feature"><div class="feature-icon">▤</div><h3>Gestão municipal</h3><p>Base para análise técnica, acompanhamento e produção de relatórios.</p></article>
+ </div>
+</section>
+<section class="view" id="view-cadastro">
+ <div class="page-heading"><span class="eyebrow">PORTAL DO CIDADÃO</span><h1>Pré-cadastro de ocupação</h1><p>Preencha os campos demonstrativos abaixo. Nesta versão, os dados não são enviados à Prefeitura.</p></div>
+ <form id="cadastroForm" class="form-card">
+  <h2>1. Identificação do responsável</h2><div class="form-grid">
+   <label>Nome completo<input name="nome" required placeholder="Nome do responsável"></label>
+   <label>Telefone de contato<input name="telefone" placeholder="(00) 00000-0000" inputmode="tel"></label>
+   <label>E-mail<input name="email" type="email" placeholder="nome@email.com"></label>
+   <label>Relação com o imóvel<select name="relacao"><option value="">Selecione</option><option>Ocupante</option><option>Possuidor</option><option>Proprietário</option><option>Representante</option></select></label>
+  </div>
+  <h2>2. Informações do imóvel</h2><div class="form-grid">
+   <label>Identificação da chácara/lote<input name="lote" placeholder="Ex.: Chácara 01, Lote A"></label>
+   <label>Setor/localidade<input name="localidade" placeholder="Setor Chacareiro"></label>
+   <label>Área aproximada (ha)<input name="area" type="number" min="0" step="0.01" placeholder="0,00"></label>
+   <label>Tempo de ocupação<select name="tempo"><option value="">Selecione</option><option>Menos de 1 ano</option><option>1 a 5 anos</option><option>6 a 10 anos</option><option>Mais de 10 anos</option></select></label>
+   <label class="full">Descrição ou referência de localização<textarea name="descricao" rows="3" placeholder="Informe referências de acesso, estrada, vizinhos ou outras observações."></textarea></label>
+  </div>
+  <div class="form-foot"><label class="check"><input type="checkbox" required> Confirmo que este é um preenchimento de demonstração e que não estou enviando documentos ou dados sensíveis reais.</label><button class="btn primary" type="submit">Salvar pré-cadastro local</button></div>
+  <p class="form-feedback" id="formFeedback" role="status"></p>
+ </form>
+</section>
+<section class="view" id="view-mapa">
+ <div class="page-heading"><span class="eyebrow">INTELIGÊNCIA TERRITORIAL</span><h1>Mapa de referência</h1><p>Visualização ilustrativa da região. Os limites e lotes oficiais deverão ser inseridos após validação da base geoespacial municipal.</p></div>
+ <div class="map-card"><div class="map-legend"><strong>Camadas demonstrativas</strong><span><i class="legend-dot blue"></i> Referência municipal</span><span><i class="legend-dot green"></i> Área de estudo (ilustrativa)</span></div><div id="map"></div><div class="map-foot">Mapa base © OpenStreetMap. Não utilizar para medição, demarcação ou decisão administrativa.</div></div>
+</section>
+<section class="view" id="view-registros">
+ <div class="page-heading"><span class="eyebrow">DADOS DESTE DISPOSITIVO</span><h1>Pré-cadastros registrados</h1><p>Registros de teste salvos no armazenamento local deste navegador.</p></div>
+ <div class="table-card"><div class="table-toolbar"><strong>Lista de registros</strong><div><button class="btn secondary" id="exportBtn">Exportar CSV</button><button class="btn danger" id="clearBtn">Limpar dados</button></div></div><div class="table-wrap"><table><thead><tr><th>Protocolo</th><th>Responsável</th><th>Imóvel</th><th>Localidade</th><th>Data</th></tr></thead><tbody id="recordsBody"><tr><td colspan="5" class="empty">Nenhum pré-cadastro neste dispositivo.</td></tr></tbody></table></div></div>
+</section>
+<section class="view" id="view-sobre">
+ <div class="page-heading"><span class="eyebrow">SOBRE A PLATAFORMA</span><h1>REURB MACHADINHO</h1><p>Sistema proposto para apoiar o cadastro territorial e a organização dos procedimentos municipais de regularização fundiária.</p></div>
+ <div class="about-card"><h2>Objetivo</h2><p>Disponibilizar uma interface acessível em computadores e dispositivos Android para estruturar pré-cadastros, informações territoriais e, em versões futuras, apoiar a análise técnica e administrativa dos procedimentos de Regularização Fundiária Urbana (REURB).</p><h2>Próximas etapas de implantação</h2><ol><li>Validar os requisitos com a Prefeitura e a equipe técnica responsável.</li><li>Obter e revisar a base cartográfica oficial do Setor Chacareiro.</li><li>Implantar API e banco de dados PostgreSQL/PostGIS em servidor protegido.</li><li>Implementar autenticação, perfis de acesso, trilha de auditoria e política de privacidade.</li><li>Testar em campo, inclusive a captura de coordenadas e o uso offline.</li></ol><div class="notice"><strong>Limite jurídico:</strong> o pré-cadastro não comprova propriedade ou posse, não concede título e não substitui análise técnica, procedimento administrativo, aprovação municipal ou registro imobiliário.</div></div>
+</section>
+<footer>REURB MACHADINHO · Protótipo responsivo · Versão demonstrativa</footer>
+</main></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script src="app.js"></script>
+</body></html>
